@@ -1,461 +1,314 @@
-# Smart School ERP - Installation Guide
+# Installation Guide - Smart School ERP
 
-## Complete Setup Instructions
+## Prerequisites
 
-### 📋 Prerequisites
+Before starting, ensure you have installed:
 
-Before starting, ensure you have:
-- **Node.js** (v14.0.0 or higher) - [Download](https://nodejs.org/)
-- **npm** or **yarn** (comes with Node.js)
-- **MongoDB Atlas Account** - [Create Free Account](https://www.mongodb.com/cloud/atlas)
-- **Git** for version control
-- **Code Editor** (VS Code recommended)
+1. **Node.js** (v14 or higher)
+   - Download: https://nodejs.org/
+   - Verify: `node --version`
 
-### ✅ Verify Installation
+2. **MongoDB** (v4.0 or higher)
+   - Option A: Local Installation
+     - Download: https://www.mongodb.com/try/download/community
+     - Install and start MongoDB service
+   - Option B: MongoDB Atlas (Cloud)
+     - Create account: https://www.mongodb.com/cloud/atlas
+     - Create cluster and get connection string
+
+3. **Git**
+   - Download: https://git-scm.com/
+   - Verify: `git --version`
+
+4. **Code Editor** (VSCode recommended)
+   - Download: https://code.visualstudio.com/
+
+## Installation Steps
+
+### 1. Clone the Repository
 
 ```bash
-node --version
-npm --version
-git --version
-```
-
----
-
-## 🔧 Step-by-Step Installation
-
-### Step 1: Clone Repository
-
-```bash
-# Navigate to desired directory
-cd path/to/your/projects
-
-# Clone the repository
 git clone https://github.com/upeshy/webnetic-tech-up-management-system.git
-
-# Navigate to project
 cd webnetic-tech-up-management-system
 ```
 
-### Step 2: Setup MongoDB Atlas
+### 2. Backend Setup
 
-1. **Create Account** at [mongodb.com](https://www.mongodb.com/cloud/atlas)
-2. **Create Cluster**
-   - Choose free tier (M0)
-   - Select closest region to you
-   - Wait for cluster to initialize (5-10 minutes)
-3. **Create Database User**
-   - Go to Database Access
-   - Add new user with username & password
-   - Select "Read and write to any database"
-4. **Get Connection String**
-   - Click "Connect" on cluster
-   - Choose "Connect your application"
-   - Copy connection string
-   - Replace `<password>` with your user password
-   - Replace `<dbname>` with `smart_school_erp`
-
-Example connection string:
-```
-mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/smart_school_erp?retryWrites=true&w=majority
-```
-
-### Step 3: Backend Setup
-
-#### 3.1 Navigate to Server Directory
-
+#### 2.1 Navigate to server directory
 ```bash
 cd server
 ```
 
-#### 3.2 Install Dependencies
-
+#### 2.2 Install dependencies
 ```bash
 npm install
 ```
 
-This installs:
-- express (web framework)
-- mongoose (MongoDB ODM)
-- jsonwebtoken (JWT authentication)
-- bcryptjs (password hashing)
-- multer (file uploads)
-- cors (cross-origin support)
-- dotenv (environment variables)
-- nodemon (development tool)
-
-#### 3.3 Create Environment File
-
-Create `.env` file in `server` directory:
-
+#### 2.3 Create environment file
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your values:
+#### 2.4 Configure .env file
+
+Edit `server/.env` file with your settings:
 
 ```env
 # Server Configuration
 PORT=5000
 NODE_ENV=development
 
-# Database
+# MongoDB Configuration
+# For Local MongoDB:
+MONGODB_URI=mongodb://localhost:27017/smart_school_erp
+
+# For MongoDB Atlas (Cloud):
 MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/smart_school_erp?retryWrites=true&w=majority
 
 # JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key_here_use_long_random_string
+JWT_SECRET=your_very_secret_key_min_32_chars_long_for_security_purposes
 JWT_EXPIRE=7d
-
-# Email Configuration (Optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
 
 # File Upload
 MAX_FILE_SIZE=5242880
 ALLOWED_EXTENSIONS=pdf,jpg,jpeg,png,doc,docx
 ```
 
-#### 3.4 Start Backend Server
+#### 2.5 Create directories for uploads
+```bash
+node scripts/createDirectories.js
+```
 
+#### 2.6 Seed database (optional - adds dummy data)
+```bash
+node scripts/seedDatabase.js
+```
+
+This will create:
+- 1 Admin user
+- 2 Teachers
+- 5 Students
+- Sample exams, results, attendance, and fees
+
+#### 2.7 Verify installation
 ```bash
 npm start
 ```
 
-Expected output:
+You should see:
 ```
-Server running on port 5000
-Database connected successfully
+╔═══════════════════════════════════════╗
+║   Smart School ERP - Backend Server   ║
+║   Server running on port 5000         ║
+║   Environment: development            ║
+╚═══════════════════════════════════════╝
+✓ MongoDB Connected: localhost
 ```
 
-✅ Backend is ready at `http://localhost:5000`
+**Stop the server** (Press Ctrl+C) and proceed to frontend setup.
 
-### Step 4: Frontend Setup
+### 3. Frontend Setup
 
-#### 4.1 Navigate to Client Directory
+Open a **new terminal** in the project root:
 
+#### 3.1 Navigate to client directory
 ```bash
-cd ../client
+cd client
 ```
 
-#### 4.2 Install Dependencies
-
+#### 3.2 Install dependencies
 ```bash
 npm install
 ```
 
-This installs:
-- react (UI library)
-- react-dom (React DOM)
-- react-router-dom (routing)
-- axios (HTTP client)
-- tailwindcss (styling)
-- react-icons (icons)
-- date-fns (date utilities)
-
-#### 4.3 Create Environment File
-
+#### 3.3 Create environment file
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
-Edit `.env.local`:
+#### 3.4 Configure .env file
+
+Edit `client/.env`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000
 VITE_APP_NAME=Smart School ERP
+VITE_APP_VERSION=1.0.0
 ```
 
-#### 4.4 Start Frontend Application
+#### 3.5 Verify installation
+```bash
+npm run dev
+```
+
+You should see:
+```
+VITE v4.2.0  ready in 500 ms
+
+➜  Local:   http://localhost:5173/
+➜  press h to show help
+```
+
+## Running the Application
+
+### Terminal 1 - Backend Server
 
 ```bash
+cd server
+npm start
+```
+
+Expected output:
+```
+✓ MongoDB Connected: localhost
+Server running on port 5000
+```
+
+### Terminal 2 - Frontend Server
+
+```bash
+cd client
 npm run dev
 ```
 
 Expected output:
 ```
-  VITE v4.x.x  ready in xxx ms
-
-  ➜  Local:   http://localhost:5173/
-  ➜  press h to show help
+➜  Local:   http://localhost:5173/
 ```
 
-✅ Frontend is ready at `http://localhost:5173`
+### Open in Browser
 
----
+Go to: **http://localhost:5173**
 
-## 🎯 Verification
+## Login Credentials
 
-### Check Backend
+The database is pre-seeded with test accounts:
 
+### Admin
+- Email: `admin@smartschool.com`
+- Password: `admin@123`
+
+### Teacher
+- Email: `teacher@smartschool.com`
+- Password: `teacher@123`
+
+### Student
+- Email: `student1@smartschool.com`
+- Password: `student@123`
+
+## Verification Checklist
+
+- [ ] Node.js installed
+- [ ] MongoDB running
+- [ ] Backend dependencies installed
+- [ ] Backend .env configured
+- [ ] Backend server running on port 5000
+- [ ] Frontend dependencies installed
+- [ ] Frontend .env configured
+- [ ] Frontend server running on port 5173
+- [ ] Can access http://localhost:5173
+- [ ] Can login with test credentials
+- [ ] Dashboard loads successfully
+
+## Troubleshooting
+
+### Backend Issues
+
+**Error: Cannot connect to MongoDB**
 ```bash
-curl http://localhost:5000/api/auth/test
+# Check if MongoDB is running
+# Update MONGODB_URI in .env
+# For MongoDB Atlas, whitelist your IP
 ```
 
-Expected response:
-```json
-{"message": "Backend is working"}
-```
-
-### Check Frontend
-
-Open browser and navigate to:
-```
-http://localhost:5173
-```
-
-You should see the login page.
-
----
-
-## 🔑 Default Test Credentials
-
-Use these credentials to test the application:
-
-### Admin Account
-```
-Email: admin@smartschool.com
-Password: admin@123
-```
-
-### Teacher Account
-```
-Email: teacher@smartschool.com
-Password: teacher@123
-```
-
-### Student Account
-```
-Email: student@smartschool.com
-Password: student@123
-```
-
-### Parent Account
-```
-Email: parent@smartschool.com
-Password: parent@123
-```
-
----
-
-## 📂 Project Structure After Setup
-
-```
-webnetic-tech-up-management-system/
-├── client/                    # React Frontend
-│   ├── node_modules/          # Dependencies
-│   ├── public/
-│   ├── src/
-│   ├── .env.local             # Environment variables
-│   ├── package.json
-│   └── vite.config.js
-│
-├── server/                    # Express Backend
-│   ├── node_modules/          # Dependencies
-│   ├── models/
-│   ├── routes/
-│   ├── controllers/
-│   ├── .env                   # Environment variables
-│   ├── server.js
-│   └── package.json
-│
-└── README.md
-```
-
----
-
-## 🚀 Development Workflow
-
-### Terminal 1 - Backend
-
+**Error: Port 5000 already in use**
 ```bash
-cd server
-npm start
-# Server runs with auto-reload via nodemon
-```
-
-### Terminal 2 - Frontend
-
-```bash
-cd client
-npm run dev
-# React dev server with HMR (Hot Module Replacement)
-```
-
-### Terminal 3 - MongoDB Connection (Optional)
-
-Test MongoDB connection:
-
-```bash
-mongosh
-# In mongosh shell
-use smart_school_erp
-db.users.find()
-```
-
----
-
-## 🐛 Troubleshooting
-
-### Issue: Port 5000 already in use
-
-**Solution:**
-```bash
-# Find process using port 5000
-lsof -i :5000
-
-# Kill process (macOS/Linux)
-kill -9 <PID>
-
-# Or change PORT in .env
+# Change port in .env
 PORT=5001
 ```
 
-### Issue: MongoDB Connection Error
-
-**Solution:**
-1. Verify connection string in `.env`
-2. Check MongoDB Atlas IP whitelist (Add 0.0.0.0/0 for development)
-3. Ensure database user has correct permissions
-4. Test with mongosh:
-   ```bash
-   mongosh "mongodb+srv://username:password@cluster.mongodb.net/smart_school_erp"
-   ```
-
-### Issue: CORS Error
-
-**Solution:**
-CORS is already configured in backend. If still getting errors:
-1. Check server is running on port 5000
-2. Check `.env` has correct API_BASE_URL in frontend
-3. Clear browser cache (Cmd+Shift+Delete)
-
-### Issue: Node modules issues
-
-**Solution:**
+**Error: Module not found**
 ```bash
-# Clear npm cache
-npm cache clean --force
-
-# Delete node_modules
-rm -rf node_modules
-rm package-lock.json
-
-# Reinstall
+cd server
+rm -rf node_modules package-lock.json
 npm install
 ```
 
-### Issue: Hot Reload Not Working
+### Frontend Issues
 
-**Solution:**
+**Error: Cannot connect to backend**
 ```bash
-# Kill all node processes
-pkill -f "node"
-
-# Restart backend
-cd server && npm start
-
-# Restart frontend in new terminal
-cd client && npm run dev
+# Check VITE_API_BASE_URL in client/.env
+# Ensure backend is running on http://localhost:5000
 ```
 
----
-
-## 📦 Package Versions
-
-### Backend Dependencies
-```json
-{
-  "express": "^4.18.2",
-  "mongoose": "^7.0.0",
-  "jsonwebtoken": "^9.0.0",
-  "bcryptjs": "^2.4.3",
-  "multer": "^1.4.5-lts.1",
-  "cors": "^2.8.5",
-  "dotenv": "^16.0.3",
-  "nodemon": "^2.0.20"
-}
-```
-
-### Frontend Dependencies
-```json
-{
-  "react": "^18.2.0",
-  "react-router-dom": "^6.10.0",
-  "axios": "^1.3.4",
-  "tailwindcss": "^3.2.7",
-  "react-icons": "^4.8.0",
-  "date-fns": "^2.29.3"
-}
-```
-
----
-
-## 🔐 Security Setup
-
-### 1. Generate Strong JWT Secret
-
+**Error: Port 5173 already in use**
 ```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+cd client
+npm run dev -- --port 5174
 ```
 
-Use the output in `.env` as JWT_SECRET
-
-### 2. Environment Variables Checklist
-
-- ✅ JWT_SECRET - Random 32+ character string
-- ✅ MONGODB_URI - Secure connection string
-- ✅ NODE_ENV - Set to "development" locally
-- ✅ MAX_FILE_SIZE - Limited file upload size
-
----
-
-## 🧪 Testing the Setup
-
-### Test Login Flow
-
-1. Open `http://localhost:5173`
-2. Enter test credentials:
-   - Email: `admin@smartschool.com`
-   - Password: `admin@123`
-3. Should redirect to dashboard
-4. Check browser console for any errors
-
-### Test API
-
+**Error: Blank page or not loading**
 ```bash
-# Test endpoint without authentication
-curl http://localhost:5000/api/auth/test
-
-# Test login
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@smartschool.com","password":"admin@123"}'
+# Clear browser cache (Ctrl+Shift+Delete)
+# Check browser console for errors (F12)
+# Restart frontend server
 ```
 
----
+## File Upload Configuration
 
-## 📚 Next Steps
+Uploads are stored in `server/uploads/` directory:
 
-1. **Explore Dashboard** - Understand the UI structure
-2. **Review API Documentation** - See API_DOCUMENTATION.md
-3. **Study Models** - Understand MongoDB schema design
-4. **Customize Branding** - Change school name, logo, colors
-5. **Add Features** - Extend functionality as needed
+```
+server/uploads/
+├── students/      # Student photos
+└── teachers/      # Teacher documents
+```
 
----
+Files are automatically created by the system.
 
-## 🆘 Getting Help
+## Database Backup/Restore
+
+### Export data (MongoDB)
+```bash
+mongodump --db smart_school_erp --out ./backup
+```
+
+### Import data
+```bash
+mongorestore --db smart_school_erp ./backup/smart_school_erp
+```
+
+## Production Checklist
+
+- [ ] Update JWT_SECRET in production
+- [ ] Set NODE_ENV=production
+- [ ] Configure MongoDB for production
+- [ ] Enable HTTPS
+- [ ] Set up proper CORS
+- [ ] Add rate limiting
+- [ ] Configure logging
+- [ ] Set up monitoring
+- [ ] Backup database regularly
+
+## Getting Help
 
 If you encounter issues:
 
-1. **Check Logs** - Look at server and browser console
-2. **Verify Setup** - Re-check all .env variables
-3. **Search Issues** - GitHub Issues section
-4. **Create Issue** - Provide detailed error information
+1. Check the error message carefully
+2. Review the troubleshooting section above
+3. Check the API documentation
+4. Search existing GitHub issues
+5. Create a new GitHub issue with error details
+
+## Next Steps
+
+- Read `API_DOCUMENTATION.md` for API details
+- Explore the codebase
+- Customize styling with Tailwind CSS
+- Add new features
+- Deploy to production
 
 ---
 
-**Setup Complete! 🎉**
-
-Your Smart School ERP is ready for development!
+**Installation complete! Happy coding! 🚀**
