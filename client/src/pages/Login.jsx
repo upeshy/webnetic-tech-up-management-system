@@ -22,17 +22,23 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.email || !formData.password) {
-      setValidationError('Please fill in all fields');
-      return;
-    }
+  e.preventDefault();
 
-    const result = await login(formData.email, formData.password);
-    if (result.success) {
-      navigate('/');
-    }
-  };
+  if (!formData.email || !formData.password) {
+    setValidationError('Please fill in all fields');
+    return;
+  }
+
+  const result = await login(formData.email, formData.password);
+
+  // ✅ ADD THIS LINE HERE
+  console.log("LOGIN SUCCESS:", result);
+
+  if (result.success) {
+    localStorage.setItem('token', result.token);
+    navigate('/');
+  }
+};
 
   const fillCredentials = (role) => {
     const creds = DEFAULT_CREDENTIALS[role];
