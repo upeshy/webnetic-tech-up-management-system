@@ -8,14 +8,13 @@ const router = express.Router();
 
 const { verifyToken, authorizeRole } = require('../middleware/auth');
 
-const { 
-  getAllTeachers, 
-  getTeacherById, 
-  createTeacher, 
-  updateTeacher, 
-  deleteTeacher 
+const {
+  getAllTeachers,
+  getTeacher,
+  createTeacher,
+  updateTeacher,
+  deleteTeacher
 } = require('../controllers/teacherController');
-
 // ================= ROUTES =================
 
 // Get all teachers
