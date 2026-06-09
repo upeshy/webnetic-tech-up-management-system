@@ -5,7 +5,12 @@ const Attendance = require('../models/Attendance');
 const Exam = require('../models/Exam');
 const Result = require('../models/Result');
 const Fees = require('../models/Fees');
-
+/* 🔥 DEBUG START */
+console.log("ADMIN:", typeof getAdminDashboard);
+console.log("STUDENT:", typeof getStudentDashboard);
+console.log("TEACHER:", typeof getTeacherDashboard);
+console.log("STATS:", typeof getStatistics);
+/* 🔥 DEBUG END */
 /**
  * Get admin dashboard data
  * GET /api/dashboard/admin
