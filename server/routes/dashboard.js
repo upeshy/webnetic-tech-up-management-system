@@ -4,15 +4,21 @@ const { protect } = require('../middleware/auth');
 
 const dashboardController = require('../controllers/dashboardController');
 
-if (!dashboardController) {
-  console.log("❌ dashboardController NOT FOUND");
+console.log("CONTROLLER:", dashboardController);
+
+const admin = dashboardController.getAdminDashboard;
+const student = dashboardController.getStudentDashboard;
+const teacher = dashboardController.getTeacherDashboard;
+const stats = dashboardController.getStatistics;
+
+// HARD CHECK (IMPORTANT)
+if (!admin || !student || !teacher || !stats) {
+  throw new Error("❌ One or more dashboard functions are undefined");
 }
 
-console.log("LOADED KEYS:", Object.keys(dashboardController));
-
-router.get('/admin', protect, dashboardController.getAdminDashboard);
-router.get('/student', protect, dashboardController.getStudentDashboard);
-router.get('/teacher', protect, dashboardController.getTeacherDashboard);
-router.get('/stats', protect, dashboardController.getStatistics);
+router.get('/admin', protect, admin);
+router.get('/student', protect, student);
+router.get('/teacher', protect, teacher);
+router.get('/stats', protect, stats);
 
 module.exports = router;
