@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { protect, authorize } = require('../middleware/auth');
+
+const { verifyToken, authorizeRole } = require('../middleware/auth');
 
 const {
   getFees,
@@ -8,9 +9,12 @@ const {
   createFees
 } = require('../controllers/feesController');
 
-// Routes
-router.get('/', protect, getFees);
-router.post('/', protect, authorize('admin'), createFees);
-router.post('/payment', protect, payFees);
+// ================= ROUTES =================
+
+router.get('/', verifyToken, getFees);
+
+router.post('/', verifyToken, authorizeRole('admin'), createFees);
+
+router.post('/payment', verifyToken, payFees);
 
 module.exports = router;
