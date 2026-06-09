@@ -5,7 +5,9 @@
 
 const express = require('express');
 const router = express.Router();
+
 const { protect, authorize } = require('../middleware/auth');
+
 const {
   getAllStudents,
   getStudent,
@@ -13,36 +15,73 @@ const {
   updateStudent,
   deleteStudent
 } = require('../controllers/studentController');
+
 const multer = require('multer');
 const path = require('path');
 
-// Multer configuration for file uploads
+// Ensure upload folder exists (important for Render/Linux)
+const fs = require('fs');
+const uploadPath = 'uploads/students';
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
+
+// Multer configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/students/');
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
     const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
+
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid file type'));
+      cb(new Error('Invalid file type. Only JPG/PNG allowed.'));
     }
   }
 });
 
-// Routes
+// ================= ROUTES =================
+
+// Get all students
 router.get('/', protect, getAllStudents);
+
+// Get single student
 router.get('/:id', protect, getStudent);
-router.post('/', protect, authorize('admin'), upload.single('photo'), createStudent);
-router.put('/:id', protect, authorize('admin'), upload.single('photo'), updateStudent);
-router.delete('/:id', protect, authorize('admin'), deleteStudent);
+
+// Create student (admin only)
+router.post(
+  '/',
+  protect,
+  authorize('admin'),
+  upload.single('photo'),
+  createStudent
+);
+
+// Update student (admin only)
+router.put(
+  '/:id',
+  protect,
+  authorize('admin'),
+  upload.single('photo'),
+  updateStudent
+);
+
+// Delete student (admin only)
+router.delete(
+  '/:id',
+  protect,
+  authorize('admin'),
+  deleteStudent
+);
 
 module.exports = router;
