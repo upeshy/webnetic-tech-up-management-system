@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { protect, authorize } = require('../middleware/auth');
+
+const { verifyToken, authorizeRole } = require('../middleware/auth');
 
 const {
   getExams,
@@ -14,21 +15,21 @@ const {
 // ================= ROUTES =================
 
 // Get all exams
-router.get('/', protect, getExams);
+router.get('/', verifyToken, getExams);
 
 // Get single exam
-router.get('/:id', protect, getExam);
+router.get('/:id', verifyToken, getExam);
 
-// Get upcoming exams
-router.get('/upcoming', protect, getUpcomingExams);
+// Upcoming exams
+router.get('/upcoming', verifyToken, getUpcomingExams);
 
 // Create exam
-router.post('/', protect, authorize('admin', 'teacher'), createExam);
+router.post('/', verifyToken, authorizeRole('admin', 'teacher'), createExam);
 
 // Update exam
-router.put('/:id', protect, authorize('admin', 'teacher'), updateExam);
+router.put('/:id', verifyToken, authorizeRole('admin', 'teacher'), updateExam);
 
 // Delete exam
-router.delete('/:id', protect, authorize('admin'), deleteExam);
+router.delete('/:id', verifyToken, authorizeRole('admin'), deleteExam);
 
 module.exports = router;
