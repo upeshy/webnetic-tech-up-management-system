@@ -86,11 +86,41 @@ const Login = () => {
         // Redirect
         setTimeout(() => {
 
-          console.log("STEP 3: Redirecting");
+  console.log("STEP 3: Redirecting");
 
-          navigate('/');
+  // Save User
+  localStorage.setItem(
+    "user",
+    JSON.stringify(result.user)
+  );
 
-        }, 1000);
+  // ROLE BASED REDIRECT
+  if (result.user.role === "admin") {
+
+    navigate("/admin");
+
+  }
+  else if (result.user.role === "teacher") {
+
+    navigate("/teacher");
+
+  }
+  else if (result.user.role === "student") {
+
+    navigate("/student");
+
+  }
+  else if (result.user.role === "parent") {
+
+    navigate("/student");
+
+  }
+  else {
+
+    navigate("/login");
+  }
+
+}, 1000);
 
       } else {
 
