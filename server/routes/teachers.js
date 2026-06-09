@@ -22,7 +22,7 @@ const {
 router.get('/', verifyToken, getAllTeachers);
 
 // Get teacher by ID
-router.get('/:id', verifyToken, getTeacherById);
+router.get('/:id', verifyToken, getTeacher);
 
 // Create teacher (admin only)
 router.post('/', verifyToken, authorizeRole('admin'), createTeacher);
