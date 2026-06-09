@@ -4,7 +4,11 @@ const { protect } = require('../middleware/auth');
 
 const dashboardController = require('../controllers/dashboardController');
 
-console.log("DASHBOARD LOADED:", Object.keys(dashboardController));
+if (!dashboardController) {
+  console.log("❌ dashboardController NOT FOUND");
+}
+
+console.log("LOADED KEYS:", Object.keys(dashboardController));
 
 router.get('/admin', protect, dashboardController.getAdminDashboard);
 router.get('/student', protect, dashboardController.getStudentDashboard);
