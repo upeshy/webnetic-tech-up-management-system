@@ -1,4 +1,6 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+
 const router = express.Router();
 
 // TEST ROUTE
@@ -9,7 +11,7 @@ router.get("/test", (req, res) => {
   });
 });
 
-// LOGIN ROUTE (DUMMY EXAMPLE)
+// LOGIN ROUTE (REAL JWT)
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -20,12 +22,23 @@ router.post("/login", (req, res) => {
     });
   }
 
+  // TODO: yahan DB check hona chahiye (abhi demo)
+  const user = {
+    id: "123",
+    email,
+    role: "admin"
+  };
+
+  const token = jwt.sign(
+    user,
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
   res.json({
     success: true,
-    token: "dummy-jwt-token",
-    user: {
-      email
-    }
+    token,
+    user
   });
 });
 
