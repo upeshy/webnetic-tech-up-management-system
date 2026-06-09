@@ -40,7 +40,7 @@ const upload = multer({
 
 // Routes
 router.get('/', protect, getAllStudents);
-router.get('/:id', protect, getStudentById);
+router.get('/:id', protect, getStudent);
 router.post('/', protect, authorize('admin'), upload.single('photo'), createStudent);
 router.put('/:id', protect, authorize('admin'), upload.single('photo'), updateStudent);
 router.delete('/:id', protect, authorize('admin'), deleteStudent);
