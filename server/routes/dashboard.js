@@ -9,7 +9,7 @@ const {
   getStatistics
 } = require('../controllers/dashboardController');
 
-// Routes (FIXED)
+// FIXED ROUTES (no undefined)
 router.get('/admin', protect, getAdminDashboard);
 router.get('/student', protect, getStudentDashboard);
 router.get('/teacher', protect, getTeacherDashboard);
