@@ -1,20 +1,13 @@
-/**
- * Protected Route Component
- * Wraps routes that require authentication
- */
-
 import { Navigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
-import Loader from './Loader';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
 
-  if (loading) {
-    return <Loader />;
-  }
+  const token = localStorage.getItem("token");
 
-  if (!isAuthenticated) {
+  // DEBUG
+  console.log("PROTECTED TOKEN:", token);
+
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
