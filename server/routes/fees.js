@@ -1,20 +1,16 @@
-/**
- * Fees Routes
- * Handles fees management and payment recording
- */
-
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
+
 const {
   getFees,
-  recordPayment,
-  createFee
+  payFees,
+  createFees
 } = require('../controllers/feesController');
 
 // Routes
 router.get('/', protect, getFees);
-router.post('/', protect, authorize('admin'), createFee);
-router.post('/payment', protect, recordPayment);
+router.post('/', protect, authorize('admin'), createFees);
+router.post('/payment', protect, payFees);
 
 module.exports = router;
