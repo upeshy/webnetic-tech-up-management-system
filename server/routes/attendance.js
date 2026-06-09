@@ -1,22 +1,28 @@
-/**
- * Attendance Routes
- * Handles attendance marking and reports
- */
-
 const express = require('express');
 const router = express.Router();
-const { protect, authorize } = require('../middleware/auth');
+
+const { verifyToken, authorizeRole } = require('../middleware/auth');
+
 const {
   getAttendance,
   createAttendance,
   createBulkAttendance,
-  updateAttendance
+  updateAttendance,
+  getAttendanceSummary,
+  deleteAttendance
 } = require('../controllers/attendanceController');
 
 // Routes
-router.get('/', protect, getAttendance);
-router.post('/', protect, authorize('admin', 'teacher'), createAttendance);
-router.post('/bulk', protect, authorize('admin', 'teacher'), createBulkAttendance);
-router.put('/:id', protect, authorize('admin', 'teacher'), updateAttendance);
+router.get('/', verifyToken, getAttendance);
+
+router.post('/', verifyToken, authorizeRole('admin', 'teacher'), createAttendance);
+
+router.post('/bulk', verifyToken, authorizeRole('admin', 'teacher'), createBulkAttendance);
+
+router.put('/:id', verifyToken, authorizeRole('admin', 'teacher'), updateAttendance);
+
+router.get('/summary/:studentId', verifyToken, getAttendanceSummary);
+
+router.delete('/:id', verifyToken, authorizeRole('admin', 'teacher'), deleteAttendance);
 
 module.exports = router;
