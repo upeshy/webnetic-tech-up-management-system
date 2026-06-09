@@ -6,7 +6,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { protect, authorize } = require('../middleware/auth');
+const { verifyToken, authorizeRole } = require('../middleware/auth');
 
 const {
   getAllStudents,
@@ -18,9 +18,9 @@ const {
 
 const multer = require('multer');
 const path = require('path');
-
-// Ensure upload folder exists (important for Render/Linux)
 const fs = require('fs');
+
+// Ensure upload folder exists
 const uploadPath = 'uploads/students';
 
 if (!fs.existsSync(uploadPath)) {
@@ -53,16 +53,16 @@ const upload = multer({
 // ================= ROUTES =================
 
 // Get all students
-router.get('/', protect, getAllStudents);
+router.get('/', verifyToken, getAllStudents);
 
 // Get single student
-router.get('/:id', protect, getStudent);
+router.get('/:id', verifyToken, getStudent);
 
 // Create student (admin only)
 router.post(
   '/',
-  protect,
-  authorize('admin'),
+  verifyToken,
+  authorizeRole('admin'),
   upload.single('photo'),
   createStudent
 );
@@ -70,8 +70,8 @@ router.post(
 // Update student (admin only)
 router.put(
   '/:id',
-  protect,
-  authorize('admin'),
+  verifyToken,
+  authorizeRole('admin'),
   upload.single('photo'),
   updateStudent
 );
@@ -79,8 +79,8 @@ router.put(
 // Delete student (admin only)
 router.delete(
   '/:id',
-  protect,
-  authorize('admin'),
+  verifyToken,
+  authorizeRole('admin'),
   deleteStudent
 );
 
