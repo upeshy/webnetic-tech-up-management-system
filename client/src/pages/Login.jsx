@@ -43,7 +43,7 @@ const Login = () => {
 
     // short delay for user to see message
     setTimeout(() => {
-      navigate('/dashboard');
+      navigate('/');
     }, 1000);
 
   } else {
