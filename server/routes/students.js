@@ -6,12 +6,12 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
-const { 
-  getAllStudents, 
-  getStudentById, 
-  createStudent, 
-  updateStudent, 
-  deleteStudent 
+const {
+  getAllStudents,
+  getStudent,
+  createStudent,
+  updateStudent,
+  deleteStudent
 } = require('../controllers/studentController');
 const multer = require('multer');
 const path = require('path');
