@@ -24,6 +24,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
+  setSuccessMsg('');
+  setValidationError('');
+
   if (!formData.email || !formData.password) {
     setValidationError('Please fill in all fields');
     return;
@@ -31,12 +34,20 @@ const Login = () => {
 
   const result = await login(formData.email, formData.password);
 
-  // ✅ ADD THIS LINE HERE
-  console.log("LOGIN SUCCESS:", result);
+  console.log("LOGIN RESULT:", result);
 
   if (result.success) {
+    setSuccessMsg("Login Successful 🎉");
+
     localStorage.setItem('token', result.token);
-    navigate('/');
+
+    // short delay for user to see message
+    setTimeout(() => {
+      navigate('/');
+    }, 1000);
+
+  } else {
+    setValidationError(result.message || "Login failed");
   }
 };
 
